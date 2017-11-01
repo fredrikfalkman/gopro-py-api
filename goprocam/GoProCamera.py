@@ -37,7 +37,7 @@ class GoPro:
 			self.prepare_gpcontrol()
 		except timeout:
 			self.prepare_gpcontrol()
-		
+
 		print("Camera successfully connected!")
 	def __init__(self, camera="detect", mac_address="AA:BB:CC:DD:EE:FF"):
 		if sys.version_info[0] < 3:
@@ -85,7 +85,7 @@ class GoPro:
 		except timeout:
 			return ""
 			print("HTTP Timeout\nMake sure the connection to the WiFi camera is still active.")
-	
+
 	def gpControlCommand(self, param):
 		try:
 			return urllib.request.urlopen('http://10.5.5.9/gp/gpControl/command/' + param, timeout=5).read().decode('utf-8')
@@ -114,9 +114,9 @@ class GoPro:
 		except (HTTPError, URLError) as error:
 			print("Error code:" + str(error.code) + "\nMake sure the connection to the WiFi camera is still active.")
 		except timeout:
-			print("HTTP Timeout\nMake sure the connection to the WiFi camera is still active.")	
-	
-	
+			print("HTTP Timeout\nMake sure the connection to the WiFi camera is still active.")
+
+
 	def sendBacpac(self, param,value):
 		#sends parameter and value to /bacpac/
 		value_notemtpy = ""
@@ -128,9 +128,9 @@ class GoPro:
 			print("Error code:" + str(error.code) + "\nMake sure the connection to the WiFi camera is still active.")
 		except timeout:
 			print("HTTP Timeout\nMake sure the connection to the WiFi camera is still active.")
-		
-	
-	
+
+
+
 	def whichCam(self):
 		# This returns what type of camera is currently connected.
 		# gpcontrol: HERO4 Black and Silver, HERO5 Black and Session, HERO Session (formally known as HERO4 Session), HERO+ LCD, HERO+.
@@ -181,8 +181,8 @@ class GoPro:
 					print("HERO3/3+")
 				self._camera="auth"
 			return self._camera
-	
-	
+
+
 	def getStatus(self, param, value=""):
 	   if self.whichCam() == "gpcontrol":
             try:
@@ -223,7 +223,7 @@ class GoPro:
 				print("HTTP Timeout\nMake sure the connection to the WiFi camera is still active.")
 		else:
 			print("Error, camera not defined.")
-	
+
 	def infoCamera(self, option=""):
 		if self.whichCam() == "gpcontrol":
 			try:
@@ -270,7 +270,7 @@ class GoPro:
 					print("HTTP Timeout\nMake sure the connection to the WiFi camera is still active.")
 		else:
 			print("Error, camera not defined.")
-	
+
 	def shutter(self,param):
 		if self.whichCam() == "gpcontrol":
 			print(self.gpControlCommand("shutter?p=" + param))
@@ -278,8 +278,8 @@ class GoPro:
 			if len(param) == 1:
 				param = "0" + param
 			self.sendBacpac("SH",param)
-	
-	
+
+
 	def mode(self, mode, submode="0"):
 		if self.whichCam() == "gpcontrol":
 			print(self.gpControlCommand("sub_mode?mode=" + mode + "&sub_mode=" + submode))
@@ -320,19 +320,19 @@ class GoPro:
 			print(self.gpControlCommand("system/locate?p=" + param))
 		else:
 			print(self.sendCamera("LL","0"+param))
-				
+
 	def hilight(self):
 		if self.whichCam() == "gpcontrol":
 			print(self.gpControlCommand("storage/tag_moment"))
 		else:
 			print("Not supported.")
-	
+
 	def power_off(self):
 		if self.whichCam() == "gpcontrol":
 			print(self.gpControlCommand("system/sleep"))
 		else:
 			print(self.sendBacpac("PW","00"))
-			
+
 	def power_on(self,_mac_address=""):
 		print("Waking up...")
 		mac_address=_mac_address
@@ -355,7 +355,7 @@ class GoPro:
 		#Fallback for HERO5
 		sock.sendto(message, ("10.5.5.9", 7))
 	def pair(self):
-		#This is a pairing procedure needed for HERO4 and HERO5 cameras. When those type GoPro camera are purchased the GoPro Mobile app needs an authentication code when pairing the camera to a mobile device for the first time. 
+		#This is a pairing procedure needed for HERO4 and HERO5 cameras. When those type GoPro camera are purchased the GoPro Mobile app needs an authentication code when pairing the camera to a mobile device for the first time.
 		#The code is useless afterwards. This function will pair your GoPro to the machine without the need of using the mobile app -- at all.
 		print("Make sure your GoPro camera is in pairing mode!\nGo to settings > Wifi > PAIR > GoProApp to start pairing.\nThen connect to it, the ssid name should be GOPRO-XXXX/GPXXXXX/GOPRO-BP-XXXX and the password is goprohero")
 		code=str(input("Enter pairing code: "))
@@ -412,7 +412,7 @@ class GoPro:
 				print("wait " + str(timer) + " seconds.")
 		time.sleep(timer)
 		self.shutter(constants.start)
-		
+
 		if self.whichCam() == "gpcontrol":
 			ready=int(self.getStatus(constants.Status.Status, constants.Status.STATUS.IsBusy))
 			while ready==1:
@@ -685,7 +685,7 @@ class GoPro:
 					lowres_filename="LOWRES"+self.getMediaInfo("folder")+"-"+self.getMediaInfo("file")
 				else:
 					print("not supported")
-				print("filename: " + lowres_filename) 
+				print("filename: " + lowres_filename)
 				print(lowres_url)
 				if custom_filename == "":
 					try:
@@ -705,7 +705,7 @@ class GoPro:
 					lowres_filename="LOWRES"+path.replace('MP4', 'LRV').replace('http://10.5.5.9:8080/videos/DCIM/','').replace('/','-')
 				else:
 					print("not supported")
-				print("filename: " + lowres_filename) 
+				print("filename: " + lowres_filename)
 				print(lowres_url)
 				if custom_filename == "":
 					try:
@@ -779,7 +779,8 @@ class GoPro:
 					self.streamSettings("1000000","4")
 				elif quality == "low":
 					self.streamSettings("250000","0")
-			subprocess.Popen("ffmpeg -f mpegts -i udp://" + self.ip_addr + ":8554 -b 800k -r 30 -f mpegts " + addr, shell=True)
+#			subprocess.Popen("ffmpeg -f mpegts -i udp://" + self.ip_addr + ":8554 -b 800k -r 30 -f mpegts " + addr, shell=True)
+            subprocess.Popen("ffmpeg -f mpegts -i udp://" + self.ip_addr + ":8554 -map 0:0 -c copy -f rtp " + addr, shell=True)
 			self.KeepAlive()
 		elif self.whichCam() == "auth":
 			subprocess.Popen("ffmpeg -i http://" + self.ip_addr + ":8080/live/amba.m3u8 -f mpegts " + addr, shell=True)
@@ -809,13 +810,13 @@ class GoPro:
 			storage = "" + str(size) + str(size_name[i])
 			return str(storage)
 		if self.whichCam() == "gpcontrol":
-			if param=="mode":		
+			if param=="mode":
 				if value == 0:
 					return "Video"
 				if value == 1:
 					return "Photo"
 				if value == 2:
-					return "Multi-Shot"	
+					return "Multi-Shot"
 			if param == "sub_mode":
 				if self.getStatus(constants.Status.Status, constants.Status.STATUS.Mode) == 0:
 					if value ==  0:
@@ -862,7 +863,7 @@ class GoPro:
 				if value == 4:
 					return "Charging"
 
-			if param == "video_res":		
+			if param == "video_res":
 				if value == 1:
 					return "4k"
 				if value == 2:
